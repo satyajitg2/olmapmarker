@@ -16,7 +16,7 @@ func main() {
 	}
 
 	ctx := context.Background()
-	rows, err := conn.Query(ctx, "SELECT name,toString(uuid) as uuid_str FROM system.tables LIMIT 5")
+	rows, err := conn.Query(ctx, "SELECT toString(user_id) as uuid_str, message FROM nats.clickhouse_table LIMIT 5")
 	if err != nil {
 		log.Fatal(err)
 	}
