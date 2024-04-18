@@ -275,6 +275,7 @@ const MapComponent = () => {
       .then(
         (natsConn) => {
           const sc = StringCodec();
+          //NOTE : This is dependent on GO_NATS_ANGULAR go_micro microservice
           const res = natsConn.request("click", sc.encode("SELECT toString(user_id) as uuid_str, message FROM nats.clickhouse_table"))
           res.then((msg) => {
             console.log("Received result", sc.decode(msg.data))
