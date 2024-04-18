@@ -31,7 +31,7 @@ func main() {
 		); err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("name: %s, uuid: %s",
+		log.Printf("user_id: %s, message: %s",
 			name, uuid)
 	}
 

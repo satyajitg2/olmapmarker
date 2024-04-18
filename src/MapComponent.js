@@ -265,12 +265,40 @@ const MapComponent = () => {
     setlocString(evt)
   }
 
+  const clickhousePost = (evt) => {
+    //setData("ClickhousePost "+counter)
+    //setCounter(counter+1)
+    conn
+      .catch(
+        console.log("Error clickhousePost")
+      )
+      .then(
+        (natsConn) => {
+          const sc = StringCodec();
+          const res = natsConn.request("click", sc.encode("SELECT toString(user_id) as uuid_str, message FROM nats.clickhouse_table"))
+          res.then((msg) => {
+            console.log("Received result", sc.decode(msg.data))
+            //clickhousePost(sc.decode(msg.data))
+            setData(sc.decode(msg.data))
+          })
+        }
+      )
+    
+
+  }
+
+  const [conn, setConn] = useState(null)
+
+  const [data, setData] = useState("")
+  const [counter, setCounter] = useState(0)
+
   useEffect(() => {
     const sc = StringCodec();
   
     const [map, iconFeature] = getLondonMap();
 
     const conn = manageNatsConnection(iconFeature, map, mapClick);
+    setConn(conn)
     return () => {map.setTarget(null)}
   }, [])
 
@@ -278,9 +306,10 @@ const MapComponent = () => {
     <>
       <div className="w-50 m-10">
         <div id="markerpopupmap" style={{ width: "95%", height: "500px" }} />
-        <div id="popup" class="ol-popup" style={{ backgroundColor: "#fff" }}>
-          <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+        <div id="popup" className="ol-popup" style={{ backgroundColor: "#fff" }}>
+          <a href="#" id="popup-closer" className="ol-popup-closer"></a>
           <div id="popup-content"></div>
+          <button onClick={clickhousePost}>Click and POST {data}</button>
         </div>
       </div>
       <ChildMapComponent location={locString}/>
