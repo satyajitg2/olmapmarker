@@ -15,6 +15,7 @@ import { NatsConnection, StringCodec, Subscription, connect } from 'nats.ws';
 import marker from "./data/airplane.png"
 import img from "./data/bigdot.png"
 import ChildMapComponent from "./ChildMapComponent";
+import { PostCard } from "./PostCard";
 
 function getLondonMap() {
 
@@ -107,17 +108,11 @@ function getLondonMap() {
 
   const rasterLayer = new TileLayer({
     source: new OSM(),
-    /*
-    source: new OGCMapTile({
-      url: 'https://maps.gnosis.earth/ogcapi/collections/NaturalEarth:raster:HYP_HR_SR_OB_DR/map/tiles/WebMercatorQuad',
-      //crossOrigin: 'anonymous',
-    }),
-    */
   });
 
   const map = new Map({
     layers: [rasterLayer, vectorLayer],
-    target: document.getElementById('markerpopupmap'),
+    target: document.getElementById('maptargetdiv'),
     view: new View({
       center: fromLonLat([2.896372, 44.6024]),
       zoom: 3,
@@ -194,7 +189,7 @@ function manageMapEffect() {
 
   const map = new Map({
     layers: [rasterLayer, vectorLayer],
-    target: "markerpopupmap",
+    target: "maptargetdiv",
     view: new View({
       center: [0, 0],
       zoom: 3,
@@ -266,8 +261,6 @@ const MapComponent = () => {
   }
 
   const clickhousePost = (evt) => {
-    //setData("ClickhousePost "+counter)
-    //setCounter(counter+1)
     conn
       .catch(
         console.log("Error clickhousePost")
@@ -276,7 +269,10 @@ const MapComponent = () => {
         (natsConn) => {
           const sc = StringCodec();
           //NOTE : This is dependent on GO_NATS_ANGULAR go_micro microservice
-          const res = natsConn.request("click", sc.encode("SELECT toString(user_id) as uuid_str, message FROM nats.clickhouse_table"))
+          const id = "222"
+          var qStr = "SELECT toString(user_id) as uuid_str, message FROM nats.clickhouse_table where user_id=" + id
+          var qAll = "select toString(user_id) as uuid_str, message FROM nats.clickhouse_table limit 5"
+          const res = natsConn.request("click", sc.encode(qAll))
           res.then((msg) => {
             console.log("Received result", sc.decode(msg.data))
             //clickhousePost(sc.decode(msg.data))
@@ -289,9 +285,7 @@ const MapComponent = () => {
   }
 
   const [conn, setConn] = useState(null)
-
   const [data, setData] = useState("")
-  const [counter, setCounter] = useState(0)
 
   useEffect(() => {
     const sc = StringCodec();
@@ -306,41 +300,25 @@ const MapComponent = () => {
   return (
     <>
       <div className="w-50 m-10">
-        <div id="markerpopupmap" style={{ width: "95%", height: "500px" }} />
+        <div id="maptargetdiv" style={{ width: "100%", height: "500px" }} />
         <div id="popup" className="ol-popup" style={{ backgroundColor: "#fff" }}>
           <a href="#" id="popup-closer" className="ol-popup-closer"></a>
           <div id="popup-content"></div>
-          <button onClick={clickhousePost}>Click and POST {data}</button>
+          <>
+          
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded" onClick={clickhousePost}>
+              Click and POST 
+            </button>
+            <p className='bg-amber-400 text-black text-2xl w-90 font-bold align-middle'>{data}</p>
+
+          </>
         </div>
       </div>
-      <ChildMapComponent location={locString}/>
+      <ChildMapComponent location={locString} dataLoc={data}/>
+   
 
     </>
   );
 }
 
 export default MapComponent
-
-/*
-
-async function sendHelloToNats(conn) {
-  const sc = StringCodec();
-  conn.publish("hello.nats_server", sc.encode("sendHelloToNats"));
-}
-
-   const data = new Data(conn, iconFeature, map)
-    data.speakToNats()
-
-class Data {
-  constructor(conn, iconFeature, map) {
-    this.conn = conn
-    this.iconFeature = iconFeature
-    this.map = map
-  }
-  speakToNats(conn) {
-    const sc = StringCodec();
-    //ERROR : //conn.publish("hello.nats_server", sc.encode("sendHelloToNats")); - Pubish is not a function
-  
-  }
-}
-*/

@@ -1,11 +1,11 @@
 import React from 'react'
 
-const ChildMapComponent = ({location}) => {
+const ChildMapComponent = ({location, dataLoc}) => {
   return (
     <>
       <div>ChildMapComponent</div>
       <section>
-        <h1>ChildMapComponent Item 1: {location} </h1>
+        <h1 className='bg-yellow-200'>ChildMapComponent Item 1: {location} and Data {dataLoc} </h1>
       </section>
     </>
   )

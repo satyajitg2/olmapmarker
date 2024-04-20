@@ -2,6 +2,7 @@ import { set } from 'ol/transform';
 import React from 'react'
 import { useState } from 'react';
 import { CardTwo } from './CardTwo';
+import { PostCard } from './PostCard';
 
 export function CardOne() {
 
@@ -18,6 +19,7 @@ export function CardOne() {
 
   return (
     <>
+      <PostCard/>
       <h1>Text 1: {counter} </h1>
       <h2>Text {counter*10} </h2>
       <button className='rounded-lg text-pretty m-4 bg-gray-600' onClick={addValue}>Add Value {counter} </button>
@@ -28,6 +30,7 @@ export function CardOne() {
       <div>
         <section>
           <CardTwo counter={counter}/>
+          <PostCard/>
         </section>
 
       </div>
