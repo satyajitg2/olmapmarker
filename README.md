@@ -1,5 +1,11 @@
 # Getting Started with React App based on Openlayers and NATS streaming
 
+Prerequisites
+1. Nats server
+2. Nats cli
+3. Node.js
+4. Clickhouse DB - optional if streaming using Nats-Clickhouse engine
+
 ## Available Scripts
 
 In the project directory, you can run:
