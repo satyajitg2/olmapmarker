@@ -33,15 +33,16 @@ authorization {
         default_permissions = {}
 }
 
-##`Listen to Nats ws socket on React App`
+## `Listen to Nats ws socket on React App`
 
 $nats sub "hello.*"
 
-##`Publish streaming data to a marker on openlayers map`
+## `Publish streaming data to a marker on openlayers map`
 
 $nats pub "geojson.feature" {{.Count}} --count 100000
 
-###The UI integrates table data from clickhouse_table to show row data and uses go_nats_angular go_micro service to get data.
+### `Clickhouse Engine`
+###The UI integrates table data from clickhouse_table to show row data and uses go_micro service to get data.
 
 Using Clickhouse -
 ./clickhouse server
