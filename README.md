@@ -18,9 +18,9 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-##Run nats server
+## `Run nats server`
 
-#nats-server -c go-nats-angular/nats-server.conf
+$nats-server -c go-nats-angular/nats-server.conf
 
 Should get an output like this:
 listen: 127.0.0.1:4222
@@ -33,15 +33,15 @@ authorization {
         default_permissions = {}
 }
 
-##Listen to Nats ws socket on React App
+##`Listen to Nats ws socket on React App`
 
-#nats sub "hello.*"
+$nats sub "hello.*"
 
-##Publish streaming data to a marker on openlayers map
+##`Publish streaming data to a marker on openlayers map`
 
-#nats pub "geojson.feature" {{.Count}} --count 100000
+$nats pub "geojson.feature" {{.Count}} --count 100000
 
-The UI now uses table data from clickhouse_table to show row data and uses go_nats_angular go_micro service to get data.
+###The UI integrates table data from clickhouse_table to show row data and uses go_nats_angular go_micro service to get data.
 
 Using Clickhouse -
 ./clickhouse server
