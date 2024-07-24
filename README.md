@@ -42,7 +42,7 @@ $nats sub "hello.*"
 $nats pub "geojson.feature" {{.Count}} --count 100000
 
 ### `Clickhouse Engine`
-###The UI integrates table data from clickhouse_table to show row data and uses go_micro service to get data.
+###The UI integrates table data from clickhouse_table to show row data and uses go_backend micro service to get data.
 
 Using Clickhouse -
 ./clickhouse server
