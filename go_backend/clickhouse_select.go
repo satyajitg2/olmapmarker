@@ -2,12 +2,23 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 )
+
+type User struct {
+	Name, Message string
+	Metric        float32
+}
+type Message struct {
+	Name, Body string
+	//Body string
+	Time int64
+}
 
 func connect() (driver.Conn, error) {
 	var (
@@ -60,7 +71,7 @@ func selectClickQuery(query string) []byte {
 
 	ctx := context.Background()
 
-	//rows, err := conn.Query(ctx, "SELECT toString(user_id) as uuid_str, message FROM nats.clickhouse_table LIMIT 5")
+	//rows, err := conn.Query(ctx, "SELECT toString(user_id) as uuid_str, message, metric FROM nats.clickhouse_table LIMIT 5")
 	rows, err := conn.Query(ctx, query)
 	if err != nil {
 		log.Fatal(err)
@@ -68,21 +79,31 @@ func selectClickQuery(query string) []byte {
 	s1 := ""
 	for rows.Next() {
 		var (
-			name, uuid string
+			model User
+			s2    []byte
 		)
 		if err := rows.Scan(
-			&name,
-			&uuid,
+			&model.Name,
+			&model.Message,
+			&model.Metric,
 		); err != nil {
 			log.Fatal(err)
 		}
-		//log.Printf("user_id: %s, message: %s", name, uuid)
-		rowString := ""
-		rowString = fmt.Sprintf("user_id: %s, message: %s",
-			name, uuid)
-		s1 += string(rowString)
-	}
+		//m := Message{"Alice", "Hello", 1294706395881547000}
+		//b, _ := json.Marshal(m)
+		//fmt.Println("Alice ", string(b))
+		//temp := model
+		//fmt.Println("t --- ", temp)
 
+		s2, _ = json.Marshal(model)
+
+		//fmt.Println("s2 ---- ", string(temps2), err)
+
+		s1 += string(s2)
+		//mRows = append(mRows, model)
+		//s2, _ := json.Marshal(model)
+	}
+	//s1 := string(json.Marshal(mRows))
 	fmt.Println("Query response string", s1)
 	slice1 := query
 	slice := append([]byte("Clickhouse selectQuery Response ECHO "))
@@ -105,15 +126,15 @@ func ranClickHouseSelect() {
 
 	for rows.Next() {
 		var (
-			name, uuid string
+			model User
 		)
 		if err := rows.Scan(
-			&name,
-			&uuid,
+			&model.Name,
+			&model.Message,
 		); err != nil {
 			log.Fatal(err)
 		}
 		log.Printf("user_id: %s, message: %s",
-			name, uuid)
+			&model.Name, &model.Message)
 	}
 }

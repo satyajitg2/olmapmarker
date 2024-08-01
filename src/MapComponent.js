@@ -271,7 +271,7 @@ const MapComponent = () => {
           //NOTE : This is dependent on GO_NATS_ANGULAR go_micro microservice
           const id = "222"
           var qStr = "SELECT toString(user_id) as uuid_str, message FROM nats.clickhouse_table where user_id=" + id
-          var qAll = "select toString(user_id) as uuid_str, message FROM nats.clickhouse_table limit 5"
+          var qAll = "select toString(user_id) as uuid_str, message, metric FROM nats.clickhouse_table limit 5"
           const res = natsConn.request("click", sc.encode(qAll))
           res.then((msg) => {
             console.log("Received result", sc.decode(msg.data))
