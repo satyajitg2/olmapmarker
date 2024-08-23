@@ -273,6 +273,7 @@ const MapComponent = () => {
           var qStr = "SELECT toString(user_id) as uuid_str, message FROM nats.clickhouse_table where user_id=" + id
           var qAll = "select toString(user_id) as uuid_str, message, metric FROM nats.clickhouse_table limit 5"
           const res = natsConn.request("click", sc.encode(qAll))
+          console.log(res)
           res.then((msg) => {
             console.log("Received result", sc.decode(msg.data))
             //clickhousePost(sc.decode(msg.data))
